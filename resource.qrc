@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/close_button_2-512.png</file>
+        <file>resources/download-load-file-256.png</file>
+        <file>resources/Color_wheel_dock_icon_by_andybaumgar-d3ezjgc.png</file>
+    </qresource>
+</RCC>
