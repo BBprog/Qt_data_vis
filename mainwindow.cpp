@@ -297,8 +297,10 @@ void MainWindow::on_actionShow_image_preview_triggered(bool checked)
 
 void MainWindow::on_actionFill_clicked_triggered(bool checked)
 {
-    colorPicker->setVisible(true);
     brushActive = checked;
+    colorPicker->setVisible(checked);
+    (checked) ? setCursor(Qt::CrossCursor)
+              : setCursor(Qt::ArrowCursor);
 }
 
 void MainWindow::on_table_itemClicked(QTableWidgetItem *item)
