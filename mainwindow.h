@@ -2,21 +2,19 @@
 #define MAINWINDOW_H
 
 #include <QColorDialog>
-#include <QLabel>
 #include <QMainWindow>
-#include <QTableWidget>
+#include <ui_mainwindow.h>
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, private Ui::MainWindow
 {
     Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
 
 private slots:
     void on_actionClose_triggered();
@@ -40,15 +38,15 @@ private slots:
     void on_table_itemClicked(QTableWidgetItem *item);
 
 private:
-    Ui::MainWindow *ui;
     const QColor Kblank = Qt::white;
     QColorDialog *colorPicker;
     bool brushActive = false;
 
     void enableEditionTools(bool active = true);
+    void errorMsgBox(QString msg);
+
     void fillItem(int col, QString text, QColor color);
     void initTable(int nbColumn, QStringList headerLabels);
-    void errorMsgBox(QString msg);
     bool findEmptyItem();
     void updateImageView();
 };

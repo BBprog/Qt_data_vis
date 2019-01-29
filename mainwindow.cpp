@@ -1,29 +1,27 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "csvreader.h"
 #include "imageviewer.h"
 
 #include <QDebug>
 #include <QFileDialog>
-#include <QColorDialog>
 #include <QMessageBox>
 #include <QScreen>
 #include <QInputDialog>
+#include <QTableWidget>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent)
 {
-    ui->setupUi(this);
+    setupUi(this);
 
     enableEditionTools(false);
 
     colorPicker = new QColorDialog(this);
     colorPicker->setOption(QColorDialog::NoButtons, true);
     colorPicker->setVisible(false);
-    ui->preview->setVisible(false);
+    preview->setVisible(false);
 
-    ui->centralWidget->layout()->addWidget(colorPicker);
+    central->layout()->addWidget(colorPicker);
 
     /*
     QColor color = QColor::fromHsv(qrand()%359, qrand()%255, 255);
@@ -46,35 +44,30 @@ MainWindow::MainWindow(QWidget *parent) :
     */
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
 void MainWindow::initTable(int nbColumn, QStringList headerLabels)
 {
-    ui->table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->table->setSelectionMode(QAbstractItemView::NoSelection);
-    ui->table->setSortingEnabled(true);
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setSortingEnabled(true);
 
-    ui->table->setRowCount(0);
-    ui->table->setColumnCount(nbColumn);
-    ui->table->setHorizontalHeaderLabels(headerLabels);
+    table->setRowCount(0);
+    table->setColumnCount(nbColumn);
+    table->setHorizontalHeaderLabels(headerLabels);
 }
 
 void MainWindow::enableEditionTools(bool active)
 {
-    ui->menuEdit->setEnabled(active);
-    ui->mainToolBar->setEnabled(active);
-    ui->mainToolBar->setVisible(active);
+    menuEdit->setEnabled(active);
+    mainToolBar->setEnabled(active);
+    mainToolBar->setVisible(active);
 }
 
 void MainWindow::fillItem(int col, QString text, QColor color)
 {
-    ui->table->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    ui->table->selectColumn(col);
-    foreach(QTableWidgetItem *item, ui->table->selectedItems()) {
+    table->selectColumn(col);
+    foreach(QTableWidgetItem *item, table->selectedItems()) {
         if (item->text() == text)
             item->setBackgroundColor(color);
         else if (item->backgroundColor() == color) {
@@ -82,8 +75,8 @@ void MainWindow::fillItem(int col, QString text, QColor color)
         }
     }
 
-    ui->table->setRangeSelected(ui->table->selectedRanges().first(), false);
-    ui->table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setRangeSelected(table->selectedRanges().first(), false);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
 
     updateImageView();
 }
@@ -91,12 +84,12 @@ void MainWindow::fillItem(int col, QString text, QColor color)
 bool MainWindow::findEmptyItem()
 {
     bool itemFound = false;
-    ui->table->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     int i = 0;
-    while (!itemFound && i < ui->table->columnCount()) {
-        ui->table->selectColumn(i);
-        foreach(QTableWidgetItem *item, ui->table->selectedItems()) {
+    while (!itemFound && i < table->columnCount()) {
+        table->selectColumn(i);
+        foreach(QTableWidgetItem *item, table->selectedItems()) {
             if (item->backgroundColor() == Kblank) {
                 itemFound = true;
                 break;
@@ -105,27 +98,27 @@ bool MainWindow::findEmptyItem()
         ++i;
     }
 
-    ui->table->setRangeSelected(ui->table->selectedRanges().first(), false);
-    ui->table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setRangeSelected(table->selectedRanges().first(), false);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
 
     return itemFound;
 }
 
 void MainWindow::updateImageView() {
-    QImage image = QImage(ui->table->columnCount(), ui->table->rowCount(), QImage::Format_RGB16);
+    QImage image = QImage(table->columnCount(), table->rowCount(), QImage::Format_RGB16);
 
-    ui->table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    for (int i = 0; i < ui->table->columnCount(); ++i) {
-        ui->table->selectColumn(i);
-        foreach(QTableWidgetItem *item, ui->table->selectedItems()) {
+    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    for (int i = 0; i < table->columnCount(); ++i) {
+        table->selectColumn(i);
+        foreach(QTableWidgetItem *item, table->selectedItems()) {
             image.setPixelColor(item->column(), item->row(), item->backgroundColor());
         }
     }
-    ui->table->setRangeSelected(ui->table->selectedRanges().first(), false);
-    ui->table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setRangeSelected(table->selectedRanges().first(), false);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
 
-    ui->imagePreview->setPixmap(QPixmap::fromImage(image));
-    ui->preview->adjustSize();
+    imagePreview->setPixmap(QPixmap::fromImage(image));
+    preview->adjustSize();
 }
 
 void MainWindow::errorMsgBox(QString msg)
@@ -159,10 +152,10 @@ void MainWindow::on_actionLoad_triggered()
     data.removeFirst();
 
     foreach(QList<QString> str, data) {
-        int row = ui->table->rowCount();
+        int row = table->rowCount();
         int col = 0;
 
-        ui->table->insertRow(row);
+        table->insertRow(row);
 
         foreach(QString el, str) {
             QTableWidgetItem *item = new QTableWidgetItem;
@@ -182,7 +175,7 @@ void MainWindow::on_actionLoad_triggered()
             item->setTextAlignment(Qt::AlignRight);
             item->setBackgroundColor(Kblank);
 
-            ui->table->setItem(row, col, item);
+            table->setItem(row, col, item);
             col++;
         }
     }
@@ -197,12 +190,12 @@ void MainWindow::on_actionFill_auto_triggered()
     QMap<QString, QColor> index;
     QColor color;
 
-    ui->table->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    for (int i = 0; i < ui->table->columnCount(); ++i) {
+    for (int i = 0; i < table->columnCount(); ++i) {
         index.clear();
-        ui->table->selectColumn(i);
-        foreach(QTableWidgetItem *item, ui->table->selectedItems()) {
+        table->selectColumn(i);
+        foreach(QTableWidgetItem *item, table->selectedItems()) {
             if (item->backgroundColor().toHsv() == Kblank.toHsv()) {
                 if (!index.contains(item->text())) {
                     color = QColor::fromHsv(qrand()%359, qrand()%255, 255);
@@ -216,8 +209,8 @@ void MainWindow::on_actionFill_auto_triggered()
         }
     }
 
-    ui->table->setRangeSelected(ui->table->selectedRanges().first(), false);
-    ui->table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setRangeSelected(table->selectedRanges().first(), false);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
 
     updateImageView();
 }
@@ -229,32 +222,32 @@ void MainWindow::on_actionPick_color_toggled(bool active)
 
 void MainWindow::on_actionReinitialize_triggered()
 {
-    ui->table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    ui->table->selectAll();
-    foreach(QTableWidgetItem *item, ui->table->selectedItems()) {
+    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    table->selectAll();
+    foreach(QTableWidgetItem *item, table->selectedItems()) {
         item->setBackgroundColor(Kblank);
     }
-    ui->table->setRangeSelected(ui->table->selectedRanges().first(), false);
-    ui->table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setRangeSelected(table->selectedRanges().first(), false);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
 
     updateImageView();
 }
 
 void MainWindow::on_actionFill_selected_triggered()
 {
-    if (!ui->table->selectedItems().isEmpty()) {
-        fillItem(ui->table->selectedItems().first()->column(), ui->table->selectedItems().first()->text(), colorPicker->currentColor());
+    if (!table->selectedItems().isEmpty()) {
+        fillItem(table->selectedItems().first()->column(), table->selectedItems().first()->text(), colorPicker->currentColor());
     }
 }
 
 void MainWindow::on_actionGenerate_Image_triggered()
 {
     /*
-    int nbColumn = ui->table->columnCount();
+    int nbColumn = table->columnCount();
 
     bool ok;
     int i = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
-                                 tr("Nombre de colonnes"), 1, 1, ui->table->rowCount()/ui->table->columnCount(), 1, &ok);
+                                 tr("Nombre de colonnes"), 1, 1, table->rowCount()/table->columnCount(), 1, &ok);
     if (ok)
         nbColumn = i;
     */
@@ -270,17 +263,17 @@ void MainWindow::on_actionGenerate_Image_triggered()
             return;
     }
 
-    QImage image = QImage(ui->table->columnCount(), ui->table->rowCount(), QImage::Format_RGB666);
+    QImage image = QImage(table->columnCount(), table->rowCount(), QImage::Format_RGB666);
 
-    ui->table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    for (int i = 0; i < ui->table->columnCount(); ++i) {
-        ui->table->selectColumn(i);
-        foreach(QTableWidgetItem *item, ui->table->selectedItems()) {
+    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    for (int i = 0; i < table->columnCount(); ++i) {
+        table->selectColumn(i);
+        foreach(QTableWidgetItem *item, table->selectedItems()) {
             image.setPixelColor(item->column(), item->row(), item->backgroundColor());
         }
     }
-    ui->table->setRangeSelected(ui->table->selectedRanges().first(), false);
-    ui->table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setRangeSelected(table->selectedRanges().first(), false);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
 
     /*
     QString fileName = QFileDialog::getSaveFileName(this,
@@ -289,7 +282,7 @@ void MainWindow::on_actionGenerate_Image_triggered()
     image.save(fileName);
     */
 
-    ui->imagePreview->setPixmap(QPixmap::fromImage(image));
+    imagePreview->setPixmap(QPixmap::fromImage(image));
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -299,10 +292,10 @@ void MainWindow::on_actionClose_triggered()
 
 void MainWindow::on_actionShow_image_preview_triggered(bool checked)
 {
-    ui->preview->setVisible(checked);
+    preview->setVisible(checked);
 }
 
-void MainWindow::on_actionfill_clicked_triggered(bool checked)
+void MainWindow::on_actionFill_clicked_triggered(bool checked)
 {
     colorPicker->setVisible(true);
     brushActive = checked;
