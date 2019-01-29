@@ -3,5 +3,18 @@
         <file>resources/close_button_2-512.png</file>
         <file>resources/download-load-file-256.png</file>
         <file>resources/Color_wheel_dock_icon_by_andybaumgar-d3ezjgc.png</file>
+        <file>resources/toimage_icon.png</file>
+        <file>resources/refresh.png</file>
+        <file>resources/brush.png</file>
+        <file>resources/fill.png</file>
+        <file>cqtablewidgetitem.cpp</file>
+        <file>cqtablewidgetitem.h</file>
+        <file>csvreader.cpp</file>
+        <file>csvreader.h</file>
+        <file>imageviewer.cpp</file>
+        <file>imageviewer.h</file>
+        <file>main.cpp</file>
+        <file>mainwindow.cpp</file>
+        <file>mainwindow.h</file>
     </qresource>
 </RCC>

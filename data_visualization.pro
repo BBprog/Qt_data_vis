@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    csvreader.cpp
+    csvreader.cpp \
+    imageviewer.cpp
 
 HEADERS += \
         mainwindow.h \
-    csvreader.h
+    csvreader.h \
+    imageviewer.h
 
 FORMS += \
         mainwindow.ui
