@@ -1,6 +1,8 @@
 #include "csvreader.h"
 #include "table.h"
 
+#include <QDebug>
+
 Table::Table(QWidget *parent)
     : QTableWidget(parent)
 { }
@@ -136,4 +138,20 @@ void Table::removeSelection()
         setRangeSelected(selection, false);
     }
     setSelectionMode(QAbstractItemView::NoSelection);
+}
+
+QImage Table::toImage()
+{
+    QImage image = QImage(columnCount(), rowCount(), QImage::Format_RGB666);
+
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    for (int i = 0; i < columnCount(); ++i) {
+        selectColumn(i);
+        foreach(QTableWidgetItem *item, selectedItems()) {
+            image.setPixelColor(item->column(), item->row(), item->backgroundColor());
+        }
+    }
+    removeSelection();
+
+    return image;
 }

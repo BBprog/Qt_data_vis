@@ -4,17 +4,13 @@
 #include <QLabel>
 #include <QScrollArea>
 
-class ImageViewer : public QWidget
+class ImageViewer : public QLabel
 {
     Q_OBJECT
 
 public:
     ImageViewer(QWidget *parent = nullptr);
     void loadImage(QImage image);
-
-private:
-    QLabel *imageLabel;
-    QScrollArea *scrollArea;
 
 };
 

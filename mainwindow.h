@@ -1,6 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "imageviewer.h"
+#include "table.h"
+
 #include <QColorDialog>
 #include <QMainWindow>
 #include <ui_mainwindow.h>
@@ -37,8 +40,12 @@ private slots:
 
 private:
     QColorDialog *colorPicker;
+    ImageViewer *preview;
+    Table *table;
+
     bool brushActive = false;
 
+    void init();
     void enableEditionTools(bool active = true);
     void errorMsgBox(QString msg);
 

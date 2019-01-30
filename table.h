@@ -19,6 +19,7 @@ public:
     bool findEmptyItem();
     void removeSelection();
 
+    QImage toImage();
 private:
     QColor Kblank = Qt::white;
 

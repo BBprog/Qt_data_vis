@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "csvreader.h"
 #include "imageviewer.h"
 
 #include <QDebug>
@@ -8,6 +7,7 @@
 #include <QScreen>
 #include <QInputDialog>
 #include <QTableWidget>
+#include <QSplitter>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -15,13 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     setupUi(this);
 
     enableEditionTools(false);
-
-    colorPicker = new QColorDialog(this);
-    colorPicker->setOption(QColorDialog::NoButtons, true);
-    colorPicker->setVisible(false);
-    preview->setVisible(false);
-
-    central->layout()->addWidget(colorPicker);
 
     /*
     QColor color = QColor::fromHsv(qrand()%359, qrand()%255, 255);
@@ -44,6 +37,31 @@ MainWindow::MainWindow(QWidget *parent) :
     */
 }
 
+void MainWindow::init()
+{
+    table = new Table;
+    table->setMinimumSize(100, 100);
+
+    colorPicker = new QColorDialog(this);
+    colorPicker->setOption(QColorDialog::NoButtons, true);
+    colorPicker->setVisible(false);
+
+    preview = new ImageViewer;
+    table->setMinimumSize(100, 100);
+    preview->setVisible(false);
+
+    QScrollArea *scrollArea = new QScrollArea;
+    scrollArea->setWidget(preview);
+    scrollArea->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+
+    QSplitter *splitter = new QSplitter;
+    splitter->addWidget(table);
+    splitter->addWidget(preview);
+    splitter->addWidget(colorPicker);
+
+    central->layout()->addWidget(splitter);
+}
+
 void MainWindow::enableEditionTools(bool active)
 {
     menuEdit->setEnabled(active);
@@ -52,30 +70,8 @@ void MainWindow::enableEditionTools(bool active)
 }
 
 void MainWindow::updateImageView() {
-    int col = table->columnCount();
-    int row = table->rowCount();
-    int n = 0;
-
-    while(row/2 > col) {
-        row /= 2;
-        col *= 2;
-    }
-/*
-    QImage image = QImage(col, row, QImage::Format_RGB16);
-
-    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    for (int i = 0; i < table->rowCount(); ++i) {
-        table->selectRow(i);
-        foreach(QTableWidgetItem *item, table->selectedItems()) {
-            image.setPixelColor(item->column()*n, item->row()%row, item->backgroundColor());
-            if (item->row()%row == 0) ++n;
-        }
-    }
-    table->removeSelection();
-
-    imagePreview->setPixmap(QPixmap::fromImage(image));
-    imagePreview->adjustSize();
-*/
+    QImage image = table->toImage();
+    preview->loadImage(image);
 }
 
 void MainWindow::errorMsgBox(QString msg)
@@ -95,6 +91,8 @@ void MainWindow::on_actionLoad_triggered()
         errorMsgBox("File not found");
         return;
     }
+
+    init();
 
     table->loadFile(fileName);
 
@@ -120,15 +118,6 @@ void MainWindow::on_actionReinitialize_triggered()
     updateImageView();
 }
 
-/*
-void MainWindow::on_actionFill_selected_triggered()
-{
-    if (!table->selectedItems().isEmpty()) {
-        table->fillItem(table->selectedItems().first()->column(), table->selectedItems().first()->text(), colorPicker->currentColor());
-    }
-}
-*/
-
 void MainWindow::on_actionGenerate_Image_triggered()
 {
     /*
@@ -152,17 +141,7 @@ void MainWindow::on_actionGenerate_Image_triggered()
             return;
     }
 
-    QImage image = QImage(table->columnCount(), table->rowCount(), QImage::Format_RGB666);
-
-    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    for (int i = 0; i < table->columnCount(); ++i) {
-        table->selectColumn(i);
-        foreach(QTableWidgetItem *item, table->selectedItems()) {
-            image.setPixelColor(item->column(), item->row(), item->backgroundColor());
-        }
-    }
-    table->removeSelection();
-    table->setSelectionMode(QAbstractItemView::NoSelection);
+    QImage image = table->toImage();
 
     /*
     QString fileName = QFileDialog::getSaveFileName(this,
@@ -171,7 +150,7 @@ void MainWindow::on_actionGenerate_Image_triggered()
     image.save(fileName);
     */
 
-    imagePreview->setPixmap(QPixmap::fromImage(image));
+    preview->loadImage(image);
 }
 
 void MainWindow::on_actionClose_triggered()
