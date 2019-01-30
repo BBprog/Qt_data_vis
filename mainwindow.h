@@ -17,15 +17,11 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
 
 private slots:
-    void on_actionClose_triggered();
-
     void on_actionLoad_triggered();
 
     void on_actionFill_auto_triggered();
 
     void on_actionReinitialize_triggered();
-
-    void on_actionFill_selected_triggered();
 
     void on_actionGenerate_Image_triggered();
 
@@ -37,17 +33,15 @@ private slots:
 
     void on_table_itemClicked(QTableWidgetItem *item);
 
+    void on_actionClose_triggered();
+
 private:
-    const QColor Kblank = Qt::white;
     QColorDialog *colorPicker;
     bool brushActive = false;
 
     void enableEditionTools(bool active = true);
     void errorMsgBox(QString msg);
 
-    void fillItem(int col, QString text, QColor color);
-    void initTable(int nbColumn, QStringList headerLabels);
-    bool findEmptyItem();
     void updateImageView();
 };
 

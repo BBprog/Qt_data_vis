@@ -44,17 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
     */
 }
 
-void MainWindow::initTable(int nbColumn, QStringList headerLabels)
-{
-    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->setSelectionMode(QAbstractItemView::NoSelection);
-    table->setSortingEnabled(true);
-
-    table->setRowCount(0);
-    table->setColumnCount(nbColumn);
-    table->setHorizontalHeaderLabels(headerLabels);
-}
-
 void MainWindow::enableEditionTools(bool active)
 {
     menuEdit->setEnabled(active);
@@ -62,63 +51,31 @@ void MainWindow::enableEditionTools(bool active)
     mainToolBar->setVisible(active);
 }
 
-void MainWindow::fillItem(int col, QString text, QColor color)
-{
-    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
-    table->selectColumn(col);
-    foreach(QTableWidgetItem *item, table->selectedItems()) {
-        if (item->text() == text)
-            item->setBackgroundColor(color);
-        else if (item->backgroundColor() == color) {
-            item->setBackgroundColor(Kblank);
-        }
-    }
-
-    table->setRangeSelected(table->selectedRanges().first(), false);
-    table->setSelectionMode(QAbstractItemView::NoSelection);
-
-    updateImageView();
-}
-
-bool MainWindow::findEmptyItem()
-{
-    bool itemFound = false;
-    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
-    int i = 0;
-    while (!itemFound && i < table->columnCount()) {
-        table->selectColumn(i);
-        foreach(QTableWidgetItem *item, table->selectedItems()) {
-            if (item->backgroundColor() == Kblank) {
-                itemFound = true;
-                break;
-            }
-        }
-        ++i;
-    }
-
-    table->setRangeSelected(table->selectedRanges().first(), false);
-    table->setSelectionMode(QAbstractItemView::NoSelection);
-
-    return itemFound;
-}
-
 void MainWindow::updateImageView() {
-    QImage image = QImage(table->columnCount(), table->rowCount(), QImage::Format_RGB16);
+    int col = table->columnCount();
+    int row = table->rowCount();
+    int n = 0;
+
+    while(row/2 > col) {
+        row /= 2;
+        col *= 2;
+    }
+/*
+    QImage image = QImage(col, row, QImage::Format_RGB16);
 
     table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    for (int i = 0; i < table->columnCount(); ++i) {
-        table->selectColumn(i);
+    for (int i = 0; i < table->rowCount(); ++i) {
+        table->selectRow(i);
         foreach(QTableWidgetItem *item, table->selectedItems()) {
-            image.setPixelColor(item->column(), item->row(), item->backgroundColor());
+            image.setPixelColor(item->column()*n, item->row()%row, item->backgroundColor());
+            if (item->row()%row == 0) ++n;
         }
     }
-    table->setRangeSelected(table->selectedRanges().first(), false);
-    table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->removeSelection();
 
     imagePreview->setPixmap(QPixmap::fromImage(image));
-    preview->adjustSize();
+    imagePreview->adjustSize();
+*/
 }
 
 void MainWindow::errorMsgBox(QString msg)
@@ -139,46 +96,7 @@ void MainWindow::on_actionLoad_triggered()
         return;
     }
 
-    CSVReader *reader = new CSVReader(fileName, ",;");
-
-    QList<QList<QString> > data = reader->getData();
-
-    if (data.isEmpty()) {
-        errorMsgBox("Can't read data from file");
-        return;
-    }
-
-    initTable(data.first().length(), data.first());
-    data.removeFirst();
-
-    foreach(QList<QString> str, data) {
-        int row = table->rowCount();
-        int col = 0;
-
-        table->insertRow(row);
-
-        foreach(QString el, str) {
-            QTableWidgetItem *item = new QTableWidgetItem;
-
-            QRegExp reInt("\\d*");
-            QRegExp reDouble("[+-]?\\d*\\.?\\d+");
-            if (reInt.exactMatch(el)) {
-                item->setData(Qt::EditRole, el.toInt());
-            }
-            else if (reDouble.exactMatch(el)) {
-                item->setData(Qt::EditRole, el.toDouble());
-            }
-            else {
-                item->setData(Qt::EditRole, el);
-            }
-
-            item->setTextAlignment(Qt::AlignRight);
-            item->setBackgroundColor(Kblank);
-
-            table->setItem(row, col, item);
-            col++;
-        }
-    }
+    table->loadFile(fileName);
 
     updateImageView();
     enableEditionTools(true);
@@ -187,31 +105,7 @@ void MainWindow::on_actionLoad_triggered()
 
 void MainWindow::on_actionFill_auto_triggered()
 {
-    QMap<QString, QColor> index;
-    QColor color;
-
-    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
-    for (int i = 0; i < table->columnCount(); ++i) {
-        index.clear();
-        table->selectColumn(i);
-        foreach(QTableWidgetItem *item, table->selectedItems()) {
-            if (item->backgroundColor().toHsv() == Kblank.toHsv()) {
-                if (!index.contains(item->text())) {
-                    color = QColor::fromHsv(qrand()%359, qrand()%255, 255);
-                    index.insert(item->text(), color);
-                }
-                else {
-                    color = index.value(item->text());
-                }
-                item->setBackgroundColor(color);
-            }
-        }
-    }
-
-    table->setRangeSelected(table->selectedRanges().first(), false);
-    table->setSelectionMode(QAbstractItemView::NoSelection);
-
+    table->fillAuto();
     updateImageView();
 }
 
@@ -222,23 +116,18 @@ void MainWindow::on_actionPick_color_toggled(bool active)
 
 void MainWindow::on_actionReinitialize_triggered()
 {
-    table->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    table->selectAll();
-    foreach(QTableWidgetItem *item, table->selectedItems()) {
-        item->setBackgroundColor(Kblank);
-    }
-    table->setRangeSelected(table->selectedRanges().first(), false);
-    table->setSelectionMode(QAbstractItemView::NoSelection);
-
+    table->reinitialize();
     updateImageView();
 }
 
+/*
 void MainWindow::on_actionFill_selected_triggered()
 {
     if (!table->selectedItems().isEmpty()) {
-        fillItem(table->selectedItems().first()->column(), table->selectedItems().first()->text(), colorPicker->currentColor());
+        table->fillItem(table->selectedItems().first()->column(), table->selectedItems().first()->text(), colorPicker->currentColor());
     }
 }
+*/
 
 void MainWindow::on_actionGenerate_Image_triggered()
 {
@@ -252,7 +141,7 @@ void MainWindow::on_actionGenerate_Image_triggered()
         nbColumn = i;
     */
 
-    if (findEmptyItem()) {
+    if (table->findEmptyItem()) {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, tr("QMessageBox::question()"),
                                         "Certaines cases sont encore de couleur blanche. Souhaitez-vous lancer une complétion automatiquement du remplissage ?",
@@ -272,7 +161,7 @@ void MainWindow::on_actionGenerate_Image_triggered()
             image.setPixelColor(item->column(), item->row(), item->backgroundColor());
         }
     }
-    table->setRangeSelected(table->selectedRanges().first(), false);
+    table->removeSelection();
     table->setSelectionMode(QAbstractItemView::NoSelection);
 
     /*
@@ -306,6 +195,7 @@ void MainWindow::on_actionFill_clicked_triggered(bool checked)
 void MainWindow::on_table_itemClicked(QTableWidgetItem *item)
 {
     if (brushActive) {
-        fillItem(item->column(), item->text(), colorPicker->currentColor());
+        table->fillItem(item->column(), item->text(), colorPicker->currentColor());
     }
+    updateImageView();
 }
