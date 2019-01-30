@@ -6,6 +6,7 @@
 
 #include <QColorDialog>
 #include <QMainWindow>
+#include <QSplitter>
 #include <ui_mainwindow.h>
 
 namespace Ui {
@@ -42,11 +43,12 @@ private:
     QColorDialog *colorPicker;
     ImageViewer *preview;
     Table *table;
+    QSplitter *splitter;
 
     bool brushActive = false;
 
     void init();
-    void enableEditionTools(bool active = true);
+    void enableEditionTools(bool checked = true);
     void errorMsgBox(QString msg);
 
     void updateImageView();

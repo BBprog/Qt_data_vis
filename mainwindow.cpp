@@ -6,8 +6,6 @@
 #include <QMessageBox>
 #include <QScreen>
 #include <QInputDialog>
-#include <QTableWidget>
-#include <QSplitter>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -40,30 +38,31 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::init()
 {
     table = new Table;
-    table->setMinimumSize(100, 100);
-    table->setMaximumHeight(QGuiApplication::primaryScreen()->availableSize().height());
+    table->setMinimumWidth(100);
 
     colorPicker = new QColorDialog(this);
     colorPicker->setOption(QColorDialog::NoButtons, true);
-    colorPicker->setMaximumHeight(QGuiApplication::primaryScreen()->availableSize().height());
     colorPicker->setVisible(false);
 
     preview = new ImageViewer;
-    preview->setMinimumSize(100, 100);
-    preview->setMaximumHeight(QGuiApplication::primaryScreen()->availableSize().height());
+    preview->setMinimumHeight(100);
     preview->setVisible(false);
 
     QScrollArea *scrollArea = new QScrollArea;
     scrollArea->setWidget(preview);
-    scrollArea->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 
-    QSplitter *splitter = new QSplitter;
+    splitter = new QSplitter;
     splitter->addWidget(table);
     splitter->addWidget(preview);
-    splitter->addWidget(colorPicker);
+    splitter->setCollapsible(0, false);
+    splitter->setCollapsible(1, false);
 
-
+    central = new QWidget;
+    central->setLayout(new QHBoxLayout);
     central->layout()->addWidget(splitter);
+    central->layout()->addWidget(colorPicker);
+
+    setCentralWidget(central);
 
     connect(table, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(on_table_itemClicked(QTableWidgetItem*)));
 }
@@ -113,9 +112,10 @@ void MainWindow::on_actionFill_auto_triggered()
     updateImageView();
 }
 
-void MainWindow::on_actionPick_color_toggled(bool active)
+void MainWindow::on_actionPick_color_toggled(bool checked)
 {
-    colorPicker->setVisible(active);
+    colorPicker->setVisible(checked);
+    splitter->adjustSize();
 }
 
 void MainWindow::on_actionReinitialize_triggered()

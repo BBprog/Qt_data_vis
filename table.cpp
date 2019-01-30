@@ -140,6 +140,7 @@ void Table::removeSelection()
     setSelectionMode(QAbstractItemView::NoSelection);
 }
 
+/*
 QImage Table::toImage()
 {
     QImage image = QImage(columnCount(), rowCount(), QImage::Format_RGB666);
@@ -153,5 +154,17 @@ QImage Table::toImage()
     }
     removeSelection();
 
+    return image;
+}
+*/
+
+QImage Table::toImage()
+{
+    QImage image = QImage(500, 500, QImage::Format_RGB666);
+    for (int i = 0; i < 500; ++i) {
+        for (int j = 0; j < 500; ++j) {
+            image.setPixelColor(i, j, Qt::blue);
+        }
+    }
     return image;
 }
