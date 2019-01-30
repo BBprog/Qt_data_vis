@@ -41,13 +41,16 @@ void MainWindow::init()
 {
     table = new Table;
     table->setMinimumSize(100, 100);
+    table->setMaximumHeight(QGuiApplication::primaryScreen()->availableSize().height());
 
     colorPicker = new QColorDialog(this);
     colorPicker->setOption(QColorDialog::NoButtons, true);
+    colorPicker->setMaximumHeight(QGuiApplication::primaryScreen()->availableSize().height());
     colorPicker->setVisible(false);
 
     preview = new ImageViewer;
-    table->setMinimumSize(100, 100);
+    preview->setMinimumSize(100, 100);
+    preview->setMaximumHeight(QGuiApplication::primaryScreen()->availableSize().height());
     preview->setVisible(false);
 
     QScrollArea *scrollArea = new QScrollArea;
@@ -59,7 +62,10 @@ void MainWindow::init()
     splitter->addWidget(preview);
     splitter->addWidget(colorPicker);
 
+
     central->layout()->addWidget(splitter);
+
+    connect(table, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(on_table_itemClicked(QTableWidgetItem*)));
 }
 
 void MainWindow::enableEditionTools(bool active)

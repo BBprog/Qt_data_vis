@@ -7,9 +7,6 @@
         <file>resources/refresh.png</file>
         <file>resources/brush.png</file>
         <file>resources/fill.png</file>
-        <file>cqtablewidgetitem.cpp</file>
-        <file>cqtablewidgetitem.h</file>
-        <file>csvreader.cpp</file>
         <file>csvreader.h</file>
         <file>imageviewer.cpp</file>
         <file>imageviewer.h</file>
