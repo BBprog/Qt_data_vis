@@ -22,6 +22,7 @@ public:
     QImage toImage();
 private:
     QColor Kblank = Qt::white;
+    QList<QColor> col_priority;
 
     void init(int nbColumn, QStringList headerLabels);
 };

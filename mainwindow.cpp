@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setupUi(this);
 
+    init();
+
     enableEditionTools(false);
 
     /*
@@ -57,12 +59,11 @@ void MainWindow::init()
     splitter->setCollapsible(0, false);
     splitter->setCollapsible(1, false);
 
-    central = new QWidget;
-    central->setLayout(new QHBoxLayout);
-    central->layout()->addWidget(splitter);
-    central->layout()->addWidget(colorPicker);
+    main->setLayout(new QHBoxLayout);
+    main->layout()->addWidget(splitter);
+    main->layout()->addWidget(colorPicker);
 
-    setCentralWidget(central);
+    main->setVisible(false);
 
     connect(table, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(on_table_itemClicked(QTableWidgetItem*)));
 }
@@ -97,13 +98,13 @@ void MainWindow::on_actionLoad_triggered()
         return;
     }
 
-    init();
-
     table->loadFile(fileName);
 
     updateImageView();
     enableEditionTools(true);
-    resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
+
+    accueil->setVisible(false);
+    main->setVisible(true);
 }
 
 void MainWindow::on_actionFill_auto_triggered()
@@ -161,7 +162,8 @@ void MainWindow::on_actionGenerate_Image_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
-    QApplication::quit();
+    main->setVisible(false);
+    accueil->setVisible(true);
 }
 
 void MainWindow::on_actionShow_image_preview_triggered(bool checked)
@@ -183,4 +185,9 @@ void MainWindow::on_table_itemClicked(QTableWidgetItem *item)
         table->fillItem(item->column(), item->text(), colorPicker->currentColor());
     }
     updateImageView();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    on_actionLoad_triggered();
 }

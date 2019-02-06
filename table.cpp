@@ -62,8 +62,10 @@ void Table::fillItem(int col, QString text, QColor color)
 
     selectColumn(col);
     foreach(QTableWidgetItem *item, selectedItems()) {
-        if (item->text() == text)
+        if (item->text() == text) {
             item->setBackgroundColor(color);
+            col_priority.append(color);
+        }
         else if (item->backgroundColor() == color) {
             item->setBackgroundColor(Kblank);
         }
@@ -78,6 +80,13 @@ void Table::fillAuto()
     QColor color;
 
     setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+    selectAll();
+    foreach(QTableWidgetItem *item, selectedItems()) {
+        bool found = (std::find(col_priority.begin(), col_priority.end(), item->backgroundColor()) != col_priority.end());
+        if (!found)
+            item->setBackgroundColor(Kblank);
+    }
 
     for (int i = 0; i < columnCount(); ++i) {
         index.clear();
@@ -140,7 +149,6 @@ void Table::removeSelection()
     setSelectionMode(QAbstractItemView::NoSelection);
 }
 
-/*
 QImage Table::toImage()
 {
     QImage image = QImage(columnCount(), rowCount(), QImage::Format_RGB666);
@@ -154,17 +162,5 @@ QImage Table::toImage()
     }
     removeSelection();
 
-    return image;
-}
-*/
-
-QImage Table::toImage()
-{
-    QImage image = QImage(500, 500, QImage::Format_RGB666);
-    for (int i = 0; i < 500; ++i) {
-        for (int j = 0; j < 500; ++j) {
-            image.setPixelColor(i, j, Qt::blue);
-        }
-    }
     return image;
 }
