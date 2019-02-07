@@ -56,6 +56,7 @@ private:
     void errorMsgBox(QString msg);
 
     void updateImageView();
+    void switchToEdit(bool active);
 };
 
 #endif // MAINWINDOW_H

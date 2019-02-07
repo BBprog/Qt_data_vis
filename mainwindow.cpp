@@ -11,10 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     setupUi(this);
-
     init();
-
-    enableEditionTools(false);
+    resize(2*QGuiApplication::primaryScreen()->availableSize().width()/3,
+           2*QGuiApplication::primaryScreen()->availableSize().height()/3);
 
     /*
     QColor color = QColor::fromHsv(qrand()%359, qrand()%255, 255);
@@ -48,7 +47,7 @@ void MainWindow::init()
 
     previewArea = new QScrollArea;
     previewArea->setAlignment(Qt::AlignCenter);
-    previewArea->setMinimumSize(100, 100);
+    previewArea->setMinimumSize(150, 100);
 
     preview = new ImageViewer(100);
     previewArea->setWidget(preview);
@@ -64,7 +63,7 @@ void MainWindow::init()
     main->layout()->addWidget(colorPicker);
     main->layout()->addWidget(splitter);
 
-    main->setVisible(false);
+    switchToEdit(false);
 
     connect(table, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(on_table_itemClicked(QTableWidgetItem*)));
 }
@@ -74,6 +73,19 @@ void MainWindow::enableEditionTools(bool active)
     menuEdit->setEnabled(active);
     mainToolBar->setEnabled(active);
     mainToolBar->setVisible(active);
+    foreach(QAction *act, menuFile->actions())
+    {
+        if (act->text() == "Save Image") {
+            act->setEnabled(active);
+        }
+    }
+}
+
+void MainWindow::switchToEdit(bool active)
+{
+    enableEditionTools(active);
+    main->setVisible(active);
+    accueil->setVisible(!active);
 }
 
 void MainWindow::updateImageView() {
@@ -101,11 +113,9 @@ void MainWindow::on_actionLoad_triggered()
 
     table->loadFile(fileName);
 
-    accueil->setVisible(false);
-    main->setVisible(true);
+    switchToEdit(true);
 
     updateImageView();
-    enableEditionTools(true);
 }
 
 void MainWindow::on_actionFill_auto_triggered()
@@ -156,12 +166,6 @@ void MainWindow::on_actionSave_Image_triggered()
     image.save(filename);
 }
 
-void MainWindow::on_actionClose_triggered()
-{
-    main->setVisible(false);
-    accueil->setVisible(true);
-}
-
 void MainWindow::on_actionShow_image_preview_triggered(bool checked)
 {
     previewArea->setVisible(checked);
@@ -186,4 +190,9 @@ void MainWindow::on_table_itemClicked(QTableWidgetItem *item)
 void MainWindow::on_pushButton_clicked()
 {
     on_actionLoad_triggered();
+}
+
+void MainWindow::on_actionClose_triggered()
+{
+    switchToEdit(false);
 }

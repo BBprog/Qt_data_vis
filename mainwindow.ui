@@ -148,6 +148,8 @@
      <string>File</string>
     </property>
     <addaction name="actionLoad"/>
+    <addaction name="actionSave_Image"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -159,7 +161,6 @@
     <addaction name="separator"/>
     <addaction name="actionPick_color"/>
     <addaction name="actionShow_image_preview"/>
-    <addaction name="actionSave_Image"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -179,8 +180,8 @@
    <addaction name="actionFill_auto"/>
    <addaction name="actionReinitialize"/>
    <addaction name="separator"/>
-   <addaction name="actionShow_image_preview"/>
    <addaction name="actionPick_color"/>
+   <addaction name="actionShow_image_preview"/>
   </widget>
   <action name="actionLoad">
    <property name="icon">
@@ -261,6 +262,9 @@
    </property>
   </action>
   <action name="actionSave_Image">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/resources/toimage_icon.png</normaloff>:/resources/toimage_icon.png</iconset>
