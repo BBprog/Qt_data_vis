@@ -57,6 +57,7 @@ private:
 
     void updateImageView();
     void switchToEdit(bool active);
+    void matchButtonsStyle();
 };
 
 #endif // MAINWINDOW_H

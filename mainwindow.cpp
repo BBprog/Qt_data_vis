@@ -86,6 +86,18 @@ void MainWindow::switchToEdit(bool active)
     enableEditionTools(active);
     main->setVisible(active);
     accueil->setVisible(!active);
+    matchButtonsStyle();
+}
+
+void MainWindow::matchButtonsStyle()
+{
+    foreach(QAction * act, mainToolBar->actions())
+    {
+        if (act->text() == "Show image preview")
+            act->setChecked(preview->isVisible());
+        else if (act->text() == "Color Picker")
+            act->setChecked(colorPicker->isVisible());
+    }
 }
 
 void MainWindow::updateImageView() {
@@ -177,6 +189,7 @@ void MainWindow::on_actionFill_clicked_triggered(bool checked)
     colorPicker->setVisible(checked);
     (checked) ? setCursor(Qt::CrossCursor)
               : setCursor(Qt::ArrowCursor);
+    matchButtonsStyle();
 }
 
 void MainWindow::on_table_itemClicked(QTableWidgetItem *item)

@@ -186,7 +186,7 @@
   <action name="actionLoad">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/resources/download-load-file-256.png</normaloff>:/resources/download-load-file-256.png</iconset>
+     <normaloff>:/resources/open.png</normaloff>:/resources/open.png</iconset>
    </property>
    <property name="text">
     <string>Charger un fichier</string>
@@ -267,7 +267,7 @@
    </property>
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/resources/toimage_icon.png</normaloff>:/resources/toimage_icon.png</iconset>
+     <normaloff>:/resources/download-load-file-256.png</normaloff>:/resources/download-load-file-256.png</iconset>
    </property>
    <property name="text">
     <string>Save Image</string>
@@ -276,7 +276,7 @@
     <string>Sauvegarder image</string>
    </property>
    <property name="shortcut">
-    <string>I</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionShow_image_preview">
@@ -307,6 +307,9 @@
    </property>
    <property name="toolTip">
     <string>colorier</string>
+   </property>
+   <property name="shortcut">
+    <string>B</string>
    </property>
   </action>
  </widget>

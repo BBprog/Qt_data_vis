@@ -13,5 +13,9 @@
         <file>main.cpp</file>
         <file>mainwindow.cpp</file>
         <file>mainwindow.h</file>
+        <file>resources/open.png</file>
+        <file>csvreader.cpp</file>
+        <file>table.cpp</file>
+        <file>table.h</file>
     </qresource>
 </RCC>
