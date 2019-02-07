@@ -159,7 +159,7 @@
     <addaction name="separator"/>
     <addaction name="actionPick_color"/>
     <addaction name="actionShow_image_preview"/>
-    <addaction name="actionGenerate_Image"/>
+    <addaction name="actionSave_Image"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -260,16 +260,16 @@
     <string>R</string>
    </property>
   </action>
-  <action name="actionGenerate_Image">
+  <action name="actionSave_Image">
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/resources/toimage_icon.png</normaloff>:/resources/toimage_icon.png</iconset>
    </property>
    <property name="text">
-    <string>Generate Image</string>
+    <string>Save Image</string>
    </property>
    <property name="toolTip">
-    <string>Générer image</string>
+    <string>Sauvegarder image</string>
    </property>
    <property name="shortcut">
     <string>I</string>

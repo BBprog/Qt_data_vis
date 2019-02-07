@@ -7,6 +7,7 @@
 #include <QColorDialog>
 #include <QMainWindow>
 #include <QSplitter>
+#include <QScrollArea>
 #include <ui_mainwindow.h>
 
 namespace Ui {
@@ -27,7 +28,7 @@ private slots:
 
     void on_actionReinitialize_triggered();
 
-    void on_actionGenerate_Image_triggered();
+    void on_actionSave_Image_triggered();
 
     void on_actionPick_color_toggled(bool active);
 
@@ -43,6 +44,7 @@ private slots:
 
 private:
     QColorDialog *colorPicker;
+    QScrollArea *previewArea;
     ImageViewer *preview;
     Table *table;
     QSplitter *splitter;

@@ -40,28 +40,29 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::init()
 {
     table = new Table;
-    table->setMinimumWidth(100);
+    table->setMinimumSize(200, 100);
 
     colorPicker = new QColorDialog(this);
     colorPicker->setOption(QColorDialog::NoButtons, true);
     colorPicker->setVisible(false);
 
-    preview = new ImageViewer;
-    preview->setMinimumHeight(100);
-    preview->setVisible(false);
+    previewArea = new QScrollArea;
+    previewArea->setAlignment(Qt::AlignCenter);
+    previewArea->setMinimumSize(100, 100);
 
-    QScrollArea *scrollArea = new QScrollArea;
-    scrollArea->setWidget(preview);
+    preview = new ImageViewer(100);
+    previewArea->setWidget(preview);
 
     splitter = new QSplitter;
     splitter->addWidget(table);
-    splitter->addWidget(preview);
+    splitter->addWidget(previewArea);
     splitter->setCollapsible(0, false);
     splitter->setCollapsible(1, false);
+    splitter->setChildrenCollapsible(false);
 
     main->setLayout(new QHBoxLayout);
-    main->layout()->addWidget(splitter);
     main->layout()->addWidget(colorPicker);
+    main->layout()->addWidget(splitter);
 
     main->setVisible(false);
 
@@ -100,11 +101,11 @@ void MainWindow::on_actionLoad_triggered()
 
     table->loadFile(fileName);
 
-    updateImageView();
-    enableEditionTools(true);
-
     accueil->setVisible(false);
     main->setVisible(true);
+
+    updateImageView();
+    enableEditionTools(true);
 }
 
 void MainWindow::on_actionFill_auto_triggered()
@@ -116,7 +117,6 @@ void MainWindow::on_actionFill_auto_triggered()
 void MainWindow::on_actionPick_color_toggled(bool checked)
 {
     colorPicker->setVisible(checked);
-    splitter->adjustSize();
 }
 
 void MainWindow::on_actionReinitialize_triggered()
@@ -125,7 +125,7 @@ void MainWindow::on_actionReinitialize_triggered()
     updateImageView();
 }
 
-void MainWindow::on_actionGenerate_Image_triggered()
+void MainWindow::on_actionSave_Image_triggered()
 {
     /*
     int nbColumn = table->columnCount();
@@ -150,14 +150,10 @@ void MainWindow::on_actionGenerate_Image_triggered()
 
     QImage image = table->toImage();
 
-    /*
-    QString fileName = QFileDialog::getSaveFileName(this,
+    QString filename = QFileDialog::getSaveFileName(this,
                 tr("Save Location"), "img.png", tr("Images (*.png *.xpm *.jpg *.bmp)"));
 
-    image.save(fileName);
-    */
-
-    preview->loadImage(image);
+    image.save(filename);
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -168,7 +164,7 @@ void MainWindow::on_actionClose_triggered()
 
 void MainWindow::on_actionShow_image_preview_triggered(bool checked)
 {
-    preview->setVisible(checked);
+    previewArea->setVisible(checked);
 }
 
 void MainWindow::on_actionFill_clicked_triggered(bool checked)
