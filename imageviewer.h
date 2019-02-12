@@ -2,6 +2,7 @@
 #define IMAGEVIEWER_H
 
 #include <QLabel>
+#include <QWindow>
 
 class ImageViewer : public QLabel
 {

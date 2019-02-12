@@ -71,11 +71,15 @@ void MainWindow::init()
 void MainWindow::enableEditionTools(bool active)
 {
     menuEdit->setEnabled(active);
+    menuShow->setEnabled(active);
     mainToolBar->setEnabled(active);
     mainToolBar->setVisible(active);
     foreach(QAction *act, menuFile->actions())
     {
-        if (act->text() == "Save Image") {
+        if (act->objectName() == "actionSave_Image") {
+            act->setEnabled(active);
+        }
+        else if (act->objectName() == "actionClose") {
             act->setEnabled(active);
         }
     }
@@ -93,9 +97,9 @@ void MainWindow::matchButtonsStyle()
 {
     foreach(QAction * act, mainToolBar->actions())
     {
-        if (act->text() == "Show image preview")
+        if (act->objectName() == "actionShow_image_preview")
             act->setChecked(preview->isVisible());
-        else if (act->text() == "Color Picker")
+        else if (act->objectName() == "actionPick_color")
             act->setChecked(colorPicker->isVisible());
     }
 }

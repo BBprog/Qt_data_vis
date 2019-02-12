@@ -17,5 +17,6 @@
         <file>csvreader.cpp</file>
         <file>table.cpp</file>
         <file>table.h</file>
+        <file>resources/open_big.png</file>
     </qresource>
 </RCC>

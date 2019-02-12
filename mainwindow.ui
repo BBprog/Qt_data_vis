@@ -44,6 +44,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="acceptDrops">
+       <bool>true</bool>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -51,6 +54,81 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="pushButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::NoContextMenu</enum>
+         </property>
+         <property name="acceptDrops">
+          <bool>true</bool>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string notr="true"/>
+         </property>
+         <property name="icon">
+          <iconset resource="resource.qrc">
+           <normaloff>:/resources/open_big.png</normaloff>:/resources/open_big.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>150</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="1" column="0">
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -63,29 +141,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="2" column="1">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>Ouvrir fichier</string>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
        </item>
        <item row="0" column="1">
         <spacer name="verticalSpacer">
@@ -100,15 +155,15 @@
          </property>
         </spacer>
        </item>
-       <item row="1" column="2">
-        <spacer name="horizontalSpacer_2">
+       <item row="2" column="1">
+        <spacer name="verticalSpacer_2">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -145,7 +200,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Fichier</string>
     </property>
     <addaction name="actionLoad"/>
     <addaction name="actionSave_Image"/>
@@ -154,16 +209,22 @@
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Edit</string>
+     <string>Edition</string>
     </property>
+    <addaction name="actionFill_clicked"/>
     <addaction name="actionFill_auto"/>
     <addaction name="actionReinitialize"/>
-    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuShow">
+    <property name="title">
+     <string>Affichage</string>
+    </property>
     <addaction name="actionPick_color"/>
     <addaction name="actionShow_image_preview"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuShow"/>
   </widget>
   <widget class="QStatusBar" name="footer"/>
   <widget class="QToolBar" name="mainToolBar">
@@ -196,12 +257,15 @@
    </property>
   </action>
   <action name="actionClose">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/resources/close_button_2-512.png</normaloff>:/resources/close_button_2-512.png</iconset>
    </property>
    <property name="text">
-    <string>Close</string>
+    <string>Fermer le fichier</string>
    </property>
    <property name="toolTip">
     <string>Fermer l'application</string>
@@ -219,7 +283,7 @@
      <normaloff>:/resources/fill.png</normaloff>:/resources/fill.png</iconset>
    </property>
    <property name="text">
-    <string>Auto Fill</string>
+    <string>Remplissage automatique</string>
    </property>
    <property name="toolTip">
     <string>Remplissage automatique</string>
@@ -237,7 +301,7 @@
      <normaloff>:/resources/Color_wheel_dock_icon_by_andybaumgar-d3ezjgc.png</normaloff>:/resources/Color_wheel_dock_icon_by_andybaumgar-d3ezjgc.png</iconset>
    </property>
    <property name="text">
-    <string>Color Picker</string>
+    <string>Selecteur de couleur</string>
    </property>
    <property name="toolTip">
     <string>Choisir une couleur</string>
@@ -252,7 +316,7 @@
      <normaloff>:/resources/refresh.png</normaloff>:/resources/refresh.png</iconset>
    </property>
    <property name="text">
-    <string>Reinitialize</string>
+    <string>Reinitialiser les couleurs</string>
    </property>
    <property name="toolTip">
     <string>Réinitialiser le remplissage</string>
@@ -270,7 +334,7 @@
      <normaloff>:/resources/download-load-file-256.png</normaloff>:/resources/download-load-file-256.png</iconset>
    </property>
    <property name="text">
-    <string>Save Image</string>
+    <string>Sauvegarder l'image</string>
    </property>
    <property name="toolTip">
     <string>Sauvegarder image</string>
@@ -303,7 +367,7 @@
      <normaloff>:/resources/brush.png</normaloff>:/resources/brush.png</iconset>
    </property>
    <property name="text">
-    <string>Fill clicked</string>
+    <string>Brosse</string>
    </property>
    <property name="toolTip">
     <string>colorier</string>
