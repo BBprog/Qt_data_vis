@@ -18,5 +18,8 @@
         <file>table.cpp</file>
         <file>table.h</file>
         <file>resources/open_big.png</file>
+        <file>resources/quit.png</file>
+        <file>iconlabel.cpp</file>
+        <file>iconlabel.h</file>
     </qresource>
 </RCC>

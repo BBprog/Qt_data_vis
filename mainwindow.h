@@ -47,6 +47,7 @@ private:
     ImageViewer *preview;
     Table *table;
     QSplitter *splitter;
+    QLabel *footerLabel;
 
     bool brushActive = false;
 
@@ -57,6 +58,7 @@ private:
     void updateImageView();
     void switchToEdit(bool active);
     void matchButtonsStyle();
+    void writeStatusBar(QString text);
 };
 
 #endif // MAINWINDOW_H

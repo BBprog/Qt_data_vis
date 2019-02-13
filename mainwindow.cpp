@@ -63,6 +63,9 @@ void MainWindow::init()
     main->layout()->addWidget(colorPicker);
     main->layout()->addWidget(splitter);
 
+    footerLabel = new QLabel;
+    footer->addWidget(footerLabel);
+
     switchToEdit(false);
 
     connect(table, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(on_table_itemClicked(QTableWidgetItem*)));
@@ -117,13 +120,21 @@ void MainWindow::errorMsgBox(QString msg)
     msgBox.exec();
 }
 
+void MainWindow::writeStatusBar(QString text)
+{
+    footerLabel->setText(text);
+}
+
 void MainWindow::on_actionLoad_triggered()
 {
+    writeStatusBar("Chargement des données...");
+
     QString fileName = QFileDialog::getOpenFileName(this,
                         tr("Load File"), "../", tr("CSV Files (*.csv)"));
 
     if (fileName.isEmpty()) {
         errorMsgBox("File not found");
+        writeStatusBar("");
         return;
     }
 
@@ -132,6 +143,12 @@ void MainWindow::on_actionLoad_triggered()
     switchToEdit(true);
 
     updateImageView();
+
+    QString taille = "Volume des données: "
+            + QString::number(table->columnCount())
+            + " x "
+            + QString::number(table->rowCount());
+    writeStatusBar(taille);
 }
 
 void MainWindow::on_actionFill_auto_triggered()
@@ -211,5 +228,6 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_actionClose_triggered()
 {
+    writeStatusBar("");
     switchToEdit(false);
 }
