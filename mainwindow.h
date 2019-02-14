@@ -41,6 +41,8 @@ private slots:
     void on_actionClose_triggered();
 
     void on_pushButton_clicked();
+    void on_actionQuit_triggered();
+
 private:
     QColorDialog *colorPicker;
     QScrollArea *previewArea;

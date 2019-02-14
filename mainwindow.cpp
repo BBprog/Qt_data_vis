@@ -11,29 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     setupUi(this);
+
     init();
+
     resize(2*QGuiApplication::primaryScreen()->availableSize().width()/3,
            2*QGuiApplication::primaryScreen()->availableSize().height()/3);
-
-    /*
-    QColor color = QColor::fromHsv(qrand()%359, qrand()%255, 255);
-
-    int r, g, b, colorDec;
-
-    color.getRgb(&r, &g, &b);
-
-    qDebug() << color.red() << color.green() << color.blue();
-    colorDec = r*g*b;
-    int ratio = 255.0*255*255/10000;
-    qDebug() << colorDec;
-    colorDec = colorDec - colorDec%ratio;
-    qDebug() << colorDec;
-
-    QString result = "#" + QString::number( colorDec, 16 );
-    qDebug() << result;
-    color.setNamedColor(result);
-    qDebug() << color.red() << color.green() << color.blue();
-    */
 }
 
 void MainWindow::init()
@@ -133,7 +115,6 @@ void MainWindow::on_actionLoad_triggered()
                         tr("Load File"), "../", tr("CSV Files (*.csv)"));
 
     if (fileName.isEmpty()) {
-        errorMsgBox("File not found");
         writeStatusBar("");
         return;
     }
@@ -170,16 +151,6 @@ void MainWindow::on_actionReinitialize_triggered()
 
 void MainWindow::on_actionSave_Image_triggered()
 {
-    /*
-    int nbColumn = table->columnCount();
-
-    bool ok;
-    int i = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
-                                 tr("Nombre de colonnes"), 1, 1, table->rowCount()/table->columnCount(), 1, &ok);
-    if (ok)
-        nbColumn = i;
-    */
-
     if (table->findEmptyItem()) {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, tr("QMessageBox::question()"),
@@ -230,4 +201,9 @@ void MainWindow::on_actionClose_triggered()
 {
     writeStatusBar("");
     switchToEdit(false);
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    QApplication::quit();
 }

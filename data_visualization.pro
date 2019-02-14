@@ -29,15 +29,13 @@ SOURCES += \
         mainwindow.cpp \
     csvreader.cpp \
     imageviewer.cpp \
-    table.cpp \
-    iconlabel.cpp
+    table.cpp
 
 HEADERS += \
         mainwindow.h \
     csvreader.h \
     imageviewer.h \
-    table.h \
-    iconlabel.h
+    table.h
 
 FORMS += \
         mainwindow.ui

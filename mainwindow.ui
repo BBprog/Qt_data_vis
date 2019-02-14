@@ -206,6 +206,7 @@
     <addaction name="actionSave_Image"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -271,7 +272,7 @@
     <string>Fermer l'application</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string>Ctrl+F</string>
    </property>
   </action>
   <action name="actionFill_auto">
@@ -374,6 +375,18 @@
    </property>
    <property name="shortcut">
     <string>B</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/resources/quit.png</normaloff>:/resources/quit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quitter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
  </widget>
